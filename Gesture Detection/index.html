@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cyberpunk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GestureX | AI Hand Gesture Control Suite</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Main Styling -->
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar">
+    <div class="brand-container">
+      <div class="brand-icon">
+        <svg viewBox="0 0 24 24">
+          <path d="M9 11.24V7.5a2.5 2.5 0 0 1 5 0v3.74a3 3 0 0 1 1.76-1.07 2.5 2.5 0 0 1 2.74 3.33L16 19.5a6 6 0 0 1-5.5 4.5h-1A6 6 0 0 1 3.5 18l-1.84-5.52a2.5 2.5 0 0 1 4.74-1.58L7.5 14V7.5A2.5 2.5 0 0 1 10 5a2.5 2.5 0 0 1 2.5 2.5v3.74z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div>
+        <div class="brand-title">GestureX <span class="brand-tag">PRO</span></div>
+      </div>
+    </div>
+
+    <ul class="nav-menu">
+      <li class="nav-item active">
+        <a href="#dashboard">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Dashboard
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#modules">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          Modules
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#guide">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          Gesture Guide
+        </a>
+      </li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <div class="status-indicator">
+        <div class="status-dot" id="server-status-dot"></div>
+        <span id="server-status-text">Server Connected</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-wrapper">
+    
+    <!-- Top Header Bar -->
+    <header class="top-header">
+      <div class="header-title">
+        <h1>Control Suite Dashboard</h1>
+        <p>Manage real-time AI hand gesture detection applications</p>
+      </div>
+      <div class="header-actions">
+        <div class="theme-selector-container">
+          <label for="theme-select">🎨 Theme:</label>
+          <select id="theme-select" class="theme-select">
+            <option value="cyberpunk" selected>Cyberpunk Neon (Default)</option>
+            <option value="default">Cyber Dark</option>
+            <option value="oled">OLED Matrix Black</option>
+            <option value="light">Frost Light Mode</option>
+          </select>
+        </div>
+        <button class="btn-danger" id="btn-stop-all">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="6" width="12" height="12"/></svg>
+          Stop All Modules
+        </button>
+      </div>
+    </header>
+
+    <!-- Dashboard Main Grid -->
+    <section class="dashboard-grid" id="dashboard">
+      
+      <!-- Live Camera Feed Container -->
+      <div class="camera-card">
+        <div class="card-header">
+          <h2>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            Live Webcam Monitor
+          </h2>
+          <span class="badge-live">Live Feed</span>
+        </div>
+        
+        <div class="video-container">
+          <video id="webcam-feed" autoplay playsinline muted></video>
+          <img id="webcam-stream" alt="Live Gesture Stream" style="display: none; width: 100%; height: 100%; object-fit: cover; border-radius: inherit;" />
+          <div class="video-overlay" id="camera-overlay-status">Camera Stream Active</div>
+        </div>
+      </div>
+
+      <!-- Stats & Telemetry Column -->
+      <div class="stats-column">
+        <div class="stat-card">
+          <div class="stat-icon cyan">⚡</div>
+          <div class="stat-info">
+            <h3>Active Script</h3>
+            <div class="stat-value" id="stat-active-module">None</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon purple">🎯</div>
+          <div class="stat-info">
+            <h3>Detection Engine</h3>
+            <div class="stat-value">MediaPipe Hands</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon green">🖥️</div>
+          <div class="stat-info">
+            <h3>Backend Server</h3>
+            <div class="stat-value" id="stat-server-port">Port 5000</div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Modules Grid Section -->
+    <section id="modules">
+      <h2 class="section-title">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        Gesture Applications
+      </h2>
+
+      <div class="modules-grid">
+        
+        <!-- Virtual Mouse Card -->
+        <div class="module-card" id="card-virtual_mouse">
+          <div>
+            <div class="module-header">
+              <div class="module-icon">🖱️</div>
+            </div>
+            <h3 class="module-title">AI Virtual Mouse</h3>
+            <p class="module-desc">Control cursor pointer, left/right clicks, and scrolling using hand index tip & pinch gestures.</p>
+          </div>
+          <div class="module-footer">
+            <span class="module-status" id="status-virtual_mouse">Stopped</span>
+            <button class="btn-toggle" onclick="toggleModule('virtual_mouse')">Launch</button>
+          </div>
+        </div>
+
+        <!-- Smart Presentation Card -->
+        <div class="module-card" id="card-smart_presentation">
+          <div>
+            <div class="module-header">
+              <div class="module-icon">📊</div>
+            </div>
+            <h3 class="module-title">Smart Presentation Mode</h3>
+            <p class="module-desc">Slide navigation (swipe left/right), laser pointer highlight, air drawing, and fist black-screen toggle.</p>
+          </div>
+          <div class="module-footer">
+            <span class="module-status" id="status-smart_presentation">Stopped</span>
+            <button class="btn-toggle" onclick="toggleModule('smart_presentation')">Launch</button>
+          </div>
+        </div>
+
+        <!-- System Adjustment Card -->
+        <div class="module-card" id="card-system_adjustment">
+          <div>
+            <div class="module-header">
+              <div class="module-icon">🔊</div>
+            </div>
+            <h3 class="module-title">System Volume & Brightness</h3>
+            <p class="module-desc">Adjust master system volume (Right Hand) and display brightness (Left Hand) with visual percentage HUD bars.</p>
+          </div>
+          <div class="module-footer">
+            <span class="module-status" id="status-system_adjustment">Stopped</span>
+            <button class="btn-toggle" onclick="toggleModule('system_adjustment')">Launch</button>
+          </div>
+        </div>
+
+        <!-- Gesture Zoom Card -->
+        <div class="module-card" id="card-zoom">
+          <div>
+            <div class="module-header">
+              <div class="module-icon">🔍</div>
+            </div>
+            <h3 class="module-title">Gesture Zoom In / Out</h3>
+            <p class="module-desc">Zoom web pages, PDFs, and maps using two-hand distance spreading/contracting or single-hand pinch.</p>
+          </div>
+          <div class="module-footer">
+            <span class="module-status" id="status-zoom">Stopped</span>
+            <button class="btn-toggle" onclick="toggleModule('zoom')">Launch</button>
+          </div>
+        </div>
+
+        <!-- Air Canvas Drawing Card -->
+        <div class="module-card" id="card-Drawing">
+          <div>
+            <div class="module-header">
+              <div class="module-icon">🎨</div>
+            </div>
+            <h3 class="module-title">Air Canvas Emoji</h3>
+            <p class="module-desc">Draw emoji patterns in air with index finger gesture tracking and interactive on-screen buttons.</p>
+          </div>
+          <div class="module-footer">
+            <span class="module-status" id="status-Drawing">Stopped</span>
+            <button class="btn-toggle" onclick="toggleModule('Drawing')">Launch</button>
+          </div>
+        </div>
+
+        <!-- Steering Wheel Card -->
+        <div class="module-card" id="card-Steering_wheel">
+          <div>
+            <div class="module-header">
+              <div class="module-icon">🏎️</div>
+            </div>
+            <h3 class="module-title">Virtual Steering Wheel</h3>
+            <p class="module-desc">Control virtual driving wheel direction and gas/brake acceleration using hand rotation gestures.</p>
+          </div>
+          <div class="module-footer">
+            <span class="module-status" id="status-Steering_wheel">Stopped</span>
+            <button class="btn-toggle" onclick="toggleModule('Steering_wheel')">Launch</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Gesture Reference Guide Section -->
+    <section class="guide-container" id="guide">
+      <h2 class="section-title">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+        Quick Gesture Cheat Sheet
+      </h2>
+
+      <div class="guide-grid">
+        <div class="guide-item">
+          <h4>🖱️ Virtual Mouse</h4>
+          <p>• Move Cursor: Index Finger UP<br>• Left Click: Index + Thumb Pinch<br>• Right Click: Middle + Thumb Pinch<br>• Scroll: Index + Middle Fingers UP</p>
+        </div>
+        <div class="guide-item">
+          <h4>📊 Presentation Controller</h4>
+          <p>• Next Slide: Swipe Hand Right<br>• Prev Slide: Swipe Hand Left<br>• Laser Dot: Index Finger UP<br>• Air Pen: Index + Middle Fingers UP<br>• Clear Air Canvas: Open Palm (5 fingers)<br>• Black Screen: Fist (0 fingers)</p>
+        </div>
+        <div class="guide-item">
+          <h4>🔊 Volume & Brightness</h4>
+          <p>• Right Hand Pinch: Master Volume (0-100%)<br>• Left Hand Pinch: Display Brightness (0-100%)</p>
+        </div>
+        <div class="guide-item">
+          <h4>🔍 Gesture Zoom</h4>
+          <p>• Spread 2 Hands Apart: Zoom In (+)<br>• Bring 2 Hands Together: Zoom Out (-)<br>• Press 'R': Reset Zoom</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Application Logic -->
+  <script src="/app.js"></script>
+</body>
+</html>
