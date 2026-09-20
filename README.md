@@ -184,11 +184,11 @@ Add your project screenshots here:
 
 **Your Name**
 
-Computer Engineering Student
+Mayank Patel
 
 ### GitHub
 
-Add your GitHub profile link here.
+https://github.com/mayankkkk4
 
 ```text
 https://github.com/your-username
